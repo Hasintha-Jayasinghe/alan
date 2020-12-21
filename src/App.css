@@ -1,0 +1,76 @@
+.alan-btn {
+  padding: 15px;
+  border-radius: 45px;
+  border: 1px solid rgb(96, 96, 252);
+  transform: translateX(25px);
+  transition-duration: 0.4s;
+  color: white;
+  background-color: rgb(96, 96, 252);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  outline: none;
+}
+
+.alan-btn:disabled {
+  background-color: rgb(161, 161, 255);
+  border-color: rgb(161, 161, 255);
+}
+
+.alan-btn:hover {
+  background-color: rgb(161, 161, 255);
+  border-color: rgb(161, 161, 255);
+}
+
+.btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.volume-control {
+  padding: 20px;
+  margin: 20px;
+}
+
+#vol::-webkit-slider-runnable-track {
+  appearance: none;
+  background: linear-gradient(to left, rgb(96, 252, 122), rgb(216, 216, 216));
+  outline: none;
+  border-radius: 20px;
+}
+
+#vol {
+  width: 200px;
+}
+
+#vol::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+.alan-btn:not(:first-child) {
+  margin-top: 20px;
+}
+
+.said {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.charts {
+  display: grid;
+  gap: 1rem;
+  place-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
+
+.vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
