@@ -10,6 +10,65 @@ interface Controls {
   volume: string;
 }
 
+interface Intent {
+  id: string;
+  name: string;
+  confidence: number;
+}
+
+interface WitAiResponse {
+  res: {
+    entities: {};
+    intents: Intent[];
+    text: string;
+    traits: any;
+  };
+}
+
+interface Response {
+  text: string;
+}
+
+interface ResponseType {
+  name: string;
+  possibleResponses: Response[];
+}
+
+const responseTypes: ResponseType[] = [
+  {
+    name: "wit$greetings",
+    possibleResponses: [
+      {
+        text: "hey",
+      },
+      {
+        text: "hello there",
+      },
+      {
+        text: "Hola",
+      },
+      {
+        text: "what's up?",
+      },
+      {
+        text: "yo",
+      },
+    ],
+  },
+  {
+    name: "wit$get_time",
+    possibleResponses: [
+      {
+        text: `${new Date().toLocaleTimeString([], {
+          hour12: true,
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`,
+      },
+    ],
+  },
+];
+
 const App = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [said, setSaid] = useState<string>("");
@@ -21,7 +80,7 @@ const App = () => {
 
   const talk = (msg: string) => {
     const speech = new SpeechSynthesisUtterance();
-    speech.volume = volume / 100;
+    speech.volume = volume / 100; // Need to divide by 100 becuase the volume has to be between 0 - 1
     speech.pitch = 0;
     speech.text = msg;
     speech.voice = voices[2];
@@ -62,9 +121,36 @@ const App = () => {
     console.log("stop");
   };
 
-  recognition.onresult = (event: SpeechRecognitionEvent) => {
-    setSaid(event.results[0][0].transcript);
-    talk(event.results[0][0].transcript);
+  recognition.onresult = async (event: SpeechRecognitionEvent) => {
+    const newSaid = event.results[0][0].transcript;
+    setSaid(newSaid);
+    const res = await fetch(`http://localhost:4500/chat?msg=${newSaid}`);
+    const json = (await res.json()) as WitAiResponse;
+
+    console.log(json);
+
+    const traits = json.res.traits;
+    const intents = json.res.intents;
+
+    responseTypes.forEach((responseType) => {
+      if (responseType.name in traits) {
+        const idx = Math.floor(
+          Math.random() * responseType.possibleResponses.length
+        );
+
+        talk(responseType.possibleResponses[idx].text);
+      } else {
+        intents.forEach((intent) => {
+          if (intent.name.includes(responseType.name)) {
+            const idx = Math.floor(
+              Math.random() * responseType.possibleResponses.length
+            );
+
+            talk(responseType.possibleResponses[idx].text);
+          }
+        });
+      }
+    });
   };
 
   recognition.onnomatch = (e) => {
@@ -104,7 +190,7 @@ const App = () => {
             }}
             className="alan-btn"
           >
-            Say something
+            Repeat
           </button>
         </div>
         <div className="said">
