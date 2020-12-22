@@ -29,13 +29,8 @@ const App = () => {
     window.speechSynthesis.speak(speech);
   };
 
-  const loadVoices = useCallback(() => {
-    setVoices([...window.speechSynthesis.getVoices()]);
-    console.log(voices);
-  }, [voiceArr]);
-
   useEffect(() => {
-    loadVoices();
+    setVoices([...window.speechSynthesis.getVoices()]);
   }, []);
 
   useEffect(() => {
