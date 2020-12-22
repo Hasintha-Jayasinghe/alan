@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import Text from "./components/text/Text";
 import Chart from "react-apexcharts";
@@ -10,10 +10,13 @@ interface Controls {
   volume: string;
 }
 
+const voiceArr = window.speechSynthesis.getVoices();
+
 const App = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [said, setSaid] = useState<string>("");
   const [volume, setVolume] = useState<number>(0);
+  const [voices, setVoices] = useState<any[]>([]);
 
   const recognition = new SpeechRecognition() as SpeechRecognition;
   recognition.lang = "en-us";
@@ -23,8 +26,18 @@ const App = () => {
     speech.volume = volume / 100;
     speech.pitch = 0;
     speech.text = msg;
+    speech.voice = voices[2];
     window.speechSynthesis.speak(speech);
   };
+
+  const loadVoices = useCallback(() => {
+    setVoices([...window.speechSynthesis.getVoices()]);
+    console.log(voices);
+  }, [voiceArr]);
+
+  useEffect(() => {
+    loadVoices();
+  }, []);
 
   useEffect(() => {
     const controls = localStorage.getItem("controls");
@@ -57,7 +70,6 @@ const App = () => {
   };
 
   recognition.onresult = (event: SpeechRecognitionEvent) => {
-    console.log(event);
     setSaid(event.results[0][0].transcript);
     talk(event.results[0][0].transcript);
   };
@@ -70,16 +82,18 @@ const App = () => {
     <>
       <div className="app">
         <h1>Alan</h1>
-        <div className="volume-control">
-          <label htmlFor="vol">Volume ({volume}%): </label>
-          <input
-            id="vol"
-            type="range"
-            value={volume}
-            onChange={(e) => {
-              setVolume(parseInt(e.target.value));
-            }}
-          />
+        <div className="controls">
+          <div className="volume-control">
+            <label htmlFor="vol">Volume ({volume}%): </label>
+            <input
+              id="vol"
+              type="range"
+              value={volume}
+              onChange={(e) => {
+                setVolume(parseInt(e.target.value));
+              }}
+            />
+          </div>
         </div>
         <div className="btn-wrapper">
           <button
@@ -93,7 +107,7 @@ const App = () => {
           </button>
           <button
             onClick={() => {
-              talk("Test");
+              talk("hey Alan");
             }}
             className="alan-btn"
           >
@@ -151,10 +165,10 @@ const App = () => {
                 "something posh",
                 "something posh",
               ],
-              colors: ["#fca503", "#03b1fc", "#a503fc", "#4de37a"],
+              colors: ["#fca503", "#4de37a", "#03b1fc", "#a503fc"],
             }}
             series={[40, 40, 30, 20]}
-            type="pie"
+            type="donut"
             height="450"
             width="350"
           />
@@ -166,10 +180,10 @@ const App = () => {
                 "something posh",
                 "something posh",
               ],
-              colors: ["#fca503", "#4de37a", "#03b1fc", "#a503fc"],
+              colors: ["#fca503", "#03b1fc", "#a503fc", "#4de37a"],
             }}
             series={[40, 40, 30, 20]}
-            type="donut"
+            type="pie"
             height="450"
             width="350"
           />
