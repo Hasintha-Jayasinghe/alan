@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Text from "./components/text/Text";
 import Chart from "react-apexcharts";
@@ -11,7 +11,6 @@ interface Controls {
 }
 
 const App = () => {
-  const voiceArr = window.speechSynthesis.getVoices();
   const [started, setStarted] = useState<boolean>(false);
   const [said, setSaid] = useState<string>("");
   const [volume, setVolume] = useState<number>(0);
