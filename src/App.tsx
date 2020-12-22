@@ -10,9 +10,8 @@ interface Controls {
   volume: string;
 }
 
-const voiceArr = window.speechSynthesis.getVoices();
-
 const App = () => {
+  const voiceArr = window.speechSynthesis.getVoices();
   const [started, setStarted] = useState<boolean>(false);
   const [said, setSaid] = useState<string>("");
   const [volume, setVolume] = useState<number>(0);
