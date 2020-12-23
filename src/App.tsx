@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Text from "./components/text/Text";
-import Chart from "react-apexcharts";
 import { ReactMic } from "react-mic";
 
 const SpeechRecognition = (window as any).webkitSpeechRecognition;
@@ -36,7 +35,7 @@ interface ResponseType {
 
 const responseTypes: ResponseType[] = [
   {
-    name: "wit$greetings",
+    name: "greeting",
     possibleResponses: [
       {
         text: "hey",
@@ -67,6 +66,79 @@ const responseTypes: ResponseType[] = [
       },
     ],
   },
+  {
+    name: "end",
+    possibleResponses: [
+      {
+        text: "bye",
+      },
+      {
+        text: "it was nice talking to you",
+      },
+      {
+        text: "See you later",
+      },
+    ],
+  },
+  {
+    name: "fact_true",
+    possibleResponses: [
+      {
+        text: "I agree 100%",
+      },
+      {
+        text: "I know right",
+      },
+      {
+        text: "What kind of person doesn't think so?",
+      },
+      {
+        text: "Yes",
+      },
+    ],
+  },
+  {
+    name: "fact_false",
+    possibleResponses: [
+      {
+        text: "Don't lie",
+      },
+      {
+        text: "No!!!!",
+      },
+      {
+        text: "I don't agree!",
+      },
+    ],
+  },
+  {
+    name: "compliment",
+    possibleResponses: [
+      {
+        text: "You flatter me!",
+      },
+      {
+        text: "oh stop it!",
+      },
+      {
+        text: "Oh stop! but keep going!", // Bit of a joke!
+      },
+    ],
+  },
+  {
+    name: "self_query",
+    possibleResponses: [
+      {
+        text: "I'm alan",
+      },
+      {
+        text: "Hi, I'm alan",
+      },
+      {
+        text: "Hello, I'm alan",
+      },
+    ],
+  },
 ];
 
 const App = () => {
@@ -83,7 +155,7 @@ const App = () => {
     speech.volume = volume / 100; // Need to divide by 100 becuase the volume has to be between 0 - 1
     speech.pitch = 0;
     speech.text = msg;
-    speech.voice = voices[2];
+    speech.voice = voices[3];
     window.speechSynthesis.speak(speech);
   };
 
@@ -129,27 +201,18 @@ const App = () => {
 
     console.log(json);
 
-    const traits = json.res.traits;
     const intents = json.res.intents;
 
     responseTypes.forEach((responseType) => {
-      if (responseType.name in traits) {
-        const idx = Math.floor(
-          Math.random() * responseType.possibleResponses.length
-        );
+      intents.forEach((intent) => {
+        if (intent.name.includes(responseType.name)) {
+          const idx = Math.floor(
+            Math.random() * responseType.possibleResponses.length
+          );
 
-        talk(responseType.possibleResponses[idx].text);
-      } else {
-        intents.forEach((intent) => {
-          if (intent.name.includes(responseType.name)) {
-            const idx = Math.floor(
-              Math.random() * responseType.possibleResponses.length
-            );
-
-            talk(responseType.possibleResponses[idx].text);
-          }
-        });
-      }
+          talk(responseType.possibleResponses[idx].text);
+        }
+      });
     });
   };
 
@@ -203,68 +266,6 @@ const App = () => {
             strokeColor="#6060fc"
             backgroundColor="#fff"
             visualSetting="frequencyBars"
-          />
-        </div>
-        <div className="charts">
-          <Chart
-            options={{
-              labels: [
-                "something posh",
-                "something posh",
-                "something posh",
-                "something posh",
-              ],
-              colors: ["#fca503", "#03b1fc", "#a503fc", "#4de37a"],
-            }}
-            series={[40, 40, 30, 20]}
-            type="pie"
-            height="450"
-            width="350"
-          />
-          <Chart
-            options={{
-              labels: [
-                "something posh",
-                "something posh",
-                "something posh",
-                "something posh",
-              ],
-              colors: ["#fca503", "#4de37a", "#03b1fc", "#a503fc"],
-            }}
-            series={[40, 40, 30, 20]}
-            type="donut"
-            height="450"
-            width="350"
-          />
-          <Chart
-            options={{
-              labels: [
-                "something posh",
-                "something posh",
-                "something posh",
-                "something posh",
-              ],
-              colors: ["#fca503", "#4de37a", "#03b1fc", "#a503fc"],
-            }}
-            series={[40, 40, 30, 20]}
-            type="donut"
-            height="450"
-            width="350"
-          />
-          <Chart
-            options={{
-              labels: [
-                "something posh",
-                "something posh",
-                "something posh",
-                "something posh",
-              ],
-              colors: ["#fca503", "#03b1fc", "#a503fc", "#4de37a"],
-            }}
-            series={[40, 40, 30, 20]}
-            type="pie"
-            height="450"
-            width="350"
           />
         </div>
       </div>
