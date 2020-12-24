@@ -3,33 +3,38 @@ import p5 from "p5";
 import "p5/lib/addons/p5.sound";
 
 interface Props {
-  color: string;
+  on: boolean;
 }
 
-const Visualizer: React.FC<Props> = ({ color }) => {
+const Visualizer: React.FC<Props> = ({ on }) => {
   const app = useRef<any>(null);
-  let fft: p5.AudioIn;
+  let mic: p5.AudioIn;
 
   useEffect(() => {
-    const newp5 = new p5((p) => {
+    const newp5 = new p5((p: p5) => {
       p.setup = () => {
         p.createCanvas(500, 500);
-        p.background(0);
-        fft = new p5.AudioIn();
-        fft.start();
+        mic = new p5.AudioIn();
+        if (on) {
+          mic.start();
+        } else {
+          mic.stop();
+        }
       };
 
       p.draw = () => {
-        p.fill(255, 255, 255, 255);
+        p.background(255);
+        const vol = mic.getLevel();
         p.noStroke();
-        p.ellipse(fft.getLevel(), 50, 40, 40);
+        p.ellipse(250, 250, vol * 200, vol * 200);
+        p.fill(96, 96, 252);
       };
     }, app.current);
 
     return () => {
       newp5.remove();
     };
-  }, []);
+  }, [on]);
 
   return <div ref={app}></div>;
 };

@@ -3,7 +3,8 @@ import "./App.css";
 import Text from "./components/text/Text";
 import Visualizer from "./components/visualizer/Visualizer";
 
-const SpeechRecognition = (window as any).webkitSpeechRecognition;
+const SpeechRecognition =
+  (window as any).webkitSpeechRecognition || window.SpeechRecognition;
 
 interface Controls {
   volume: string;
@@ -260,7 +261,7 @@ const App = () => {
           <Text text={said} />
         </div>
         <div className="vs">
-          <Visualizer color="red" />
+          <Visualizer on={started} />
         </div>
       </div>
     </>

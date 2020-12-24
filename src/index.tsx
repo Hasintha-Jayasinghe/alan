@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-/*
+
 import * as p5 from "p5";
 
 declare global {
@@ -13,8 +13,6 @@ declare global {
 }
 
 window.p5 = p5;
-
-*/
 
 ReactDOM.render(
   <React.StrictMode>
