@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Text from "./components/text/Text";
-import { ReactMic } from "react-mic";
+import Visualizer from "./components/visualizer/Visualizer";
 
 const SpeechRecognition = (window as any).webkitSpeechRecognition;
 
@@ -260,13 +260,7 @@ const App = () => {
           <Text text={said} />
         </div>
         <div className="vs">
-          <ReactMic
-            record={started}
-            className="sound-wave"
-            strokeColor="#6060fc"
-            backgroundColor="#fff"
-            visualSetting="frequencyBars"
-          />
+          <Visualizer color="red" />
         </div>
       </div>
     </>

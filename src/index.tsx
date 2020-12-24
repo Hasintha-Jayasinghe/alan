@@ -3,6 +3,18 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+/*
+import * as p5 from "p5";
+
+declare global {
+  interface Window {
+    p5: typeof p5;
+  }
+}
+
+window.p5 = p5;
+
+*/
 
 ReactDOM.render(
   <React.StrictMode>
