@@ -197,7 +197,7 @@ const App = () => {
   recognition.onresult = async (event: SpeechRecognitionEvent) => {
     const newSaid = event.results[0][0].transcript;
     setSaid(newSaid);
-    const res = await fetch(`http://localhost:4500/chat?msg=${newSaid}`);
+    const res = await fetch(`http://ec2-100-26-214-229.compute-1.amazonaws.com:4500/chat?msg=${newSaid}`);
     const json = (await res.json()) as WitAiResponse;
 
     console.log(json);
